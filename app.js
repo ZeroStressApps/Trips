@@ -302,5 +302,12 @@ onAuthStateChanged(auth,user=>{
   if(!user){if(unsubTrips)unsubTrips();showAuth();return}
   showApp();subscribeTrips();
 });
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(console.error));
+if('serviceWorker' in navigator)window.addEventListener('load',async()=>{
+  try{
+    const registration=await navigator.serviceWorker.register('./service-worker.js');
+    await registration.update();
+  }catch(error){
+    console.error('ZERO STRESS TRIPS · SERVICE WORKER UPDATE',error);
+  }
+});
 setAuthMode('login');
