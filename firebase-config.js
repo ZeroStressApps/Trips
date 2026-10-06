@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyBIb9vRE_zPGPeAk97g0aPPshCdChtPJz4",
+  apiKey: "AIzaSyBIb9vRE_zPGPeAk97g0aPPsHcDChtPJz4",
   authDomain: "zerostress-trips.firebaseapp.com",
   projectId: "zerostress-trips",
   storageBucket: "zerostress-trips.firebasestorage.app",
