@@ -1,10 +1,8 @@
-// Copia aquí la configuración de tu proyecto Firebase.
-// Firebase Console → Configuración del proyecto → Tus apps → Web.
 export const firebaseConfig = {
-  apiKey: "PEGA_AQUI_TU_API_KEY",
-  authDomain: "TU_PROYECTO.firebaseapp.com",
-  projectId: "TU_PROYECTO",
-  storageBucket: "TU_PROYECTO.firebasestorage.app",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyBIb9vRE_zPGPeAk97g0aPPshCdChtPJz4",
+  authDomain: "zerostress-trips.firebaseapp.com",
+  projectId: "zerostress-trips",
+  storageBucket: "zerostress-trips.firebasestorage.app",
+  messagingSenderId: "252842615832",
+  appId: "1:252842615832:web:5a5c5da7dd5c64675acf6d"
 };
