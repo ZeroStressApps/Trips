@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    match /users/{userId} {
+      allow create, read, update: if signedIn()
+        && request.auth.uid == userId;
+    }
+
+    match /trips/{tripId} {
+      allow create: if signedIn()
+        && request.resource.data.creatorUid == request.auth.uid
+        && request.resource.data.memberUids.hasAny([request.auth.uid]);
+
+      allow read: if signedIn()
+        && resource.data.memberUids.hasAny([request.auth.uid]);
+
+      allow update: if signedIn()
+        && (
+          resource.data.memberUids.hasAny([request.auth.uid])
+        )
+        && (
+          request.resource.data.memberUids.hasAny([request.auth.uid])
+        )
+        && (
+          request.resource.data.creatorUid == resource.data.creatorUid
+        )
+        && (
+          request.resource.data.creatorUid == request.auth.uid
+          || (
+            request.resource.data.memberUids == resource.data.memberUids
+            && request.resource.data.memberNames == resource.data.memberNames
+          )
+          || (
+            request.resource.data.memberUids.size() == resource.data.memberUids.size() + 1
+            && request.resource.data.memberUids.hasAll(resource.data.memberUids)
+            && request.resource.data.memberNames.size() == resource.data.memberNames.size() + 1
+            && request.resource.data.memberNames.hasAll(resource.data.memberNames)
+          )
+        );
+
+      allow delete: if signedIn()
+        && resource.data.creatorUid == request.auth.uid;
+    }
+
+    match /trips/{tripId}/{subcollection}/{docId} {
+      allow read, write: if signedIn()
+        && get(/databases/$(database)/documents/trips/$(tripId))
+             .data.memberUids.hasAny([request.auth.uid]);
+    }
+  }
+}

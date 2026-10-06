@@ -54,19 +54,36 @@ $('authForm').onsubmit=async e=>{
       const name=$('authName').value.trim();
       const cred=await createUserWithEmailAndPassword(auth,email,password);
       await updateProfile(cred.user,{displayName:name||email.split('@')[0]});
-      await setDoc(doc(db,'users',cred.user.uid),{uid:cred.user.uid,name:name||email.split('@')[0],email,createdAt:serverTimestamp()},{merge:true});
+      try{
+        await setDoc(doc(db,'users',cred.user.uid),{uid:cred.user.uid,name:name||email.split('@')[0],email,createdAt:serverTimestamp()},{merge:true});
+      }catch(profileError){
+        console.error('ZERO STRESS TRIPS · FIRESTORE USER PROFILE ERROR', profileError);
+        msg(`La cuenta de Firebase se creó, pero no se pudo guardar el perfil: ${profileError?.code || profileError?.message || profileError}`);
+        return;
+      }
     }else await signInWithEmailAndPassword(auth,email,password);
   }catch(e){msg(authError(e))}finally{$('authSubmit').disabled=false}
 };
 $('logoutBtn').onclick=()=>signOut(auth);
 
 function authError(e){
+  console.error('ZERO STRESS TRIPS · ERROR FIREBASE AUTH', {
+    code: e?.code,
+    message: e?.message,
+    name: e?.name,
+    customData: e?.customData
+  });
   const c=e?.code||'';
   if(c.includes('invalid-credential')||c.includes('wrong-password'))return 'Email o contraseña incorrectos.';
   if(c.includes('email-already-in-use'))return 'Ese email ya tiene una cuenta.';
   if(c.includes('weak-password'))return 'La contraseña debe tener al menos 6 caracteres.';
   if(c.includes('invalid-email'))return 'El email no es válido.';
-  return 'No se ha podido completar la operación. Comprueba la conexión.';
+  if(c.includes('operation-not-allowed'))return 'Firebase no tiene habilitado Correo electrónico/contraseña en Método de acceso.';
+  if(c.includes('unauthorized-domain'))return 'Firebase no autoriza este dominio. Añade zerostressapps.github.io en Dominios autorizados.';
+  if(c.includes('invalid-api-key'))return 'La API Key de Firebase no es válida.';
+  if(c.includes('api-key-not-valid'))return 'La API Key de Firebase no es válida para este proyecto.';
+  if(c.includes('network-request-failed'))return 'Firebase no puede conectar con el servidor. Comprueba la conexión.';
+  return `Firebase devuelve ${c || 'un error desconocido'}: ${e?.message || 'sin detalle'}`;
 }
 
 function formatDate(s){if(!s)return '';const d=new Date(s+'T12:00:00');return new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'short',year:'numeric'}).format(d)}
