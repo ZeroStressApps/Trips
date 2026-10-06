@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f7cff"><meta name="description" content="ZeroStress Trips · Tu viaje. Tu historia.">
+<title>ZeroStress Trips</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">✈️</div><div><div class="brand-name">ZeroStress</div><div class="brand-sub">TRIPS</div></div></div>
+    <div class="top-actions"><button id="languageBtn" class="icon-btn" aria-label="Language">🌍 <span id="languageLabel">ES</span></button></div>
+  </header>
+
+  <main>
+    <section id="homeView" class="view active">
+      <div class="welcome"><div><div class="eyebrow" data-i18n="my_trips">MIS VIAJES</div><h1 data-i18n="travel_is_yours">Tu viaje. Tu historia.</h1><p data-i18n="home_intro">Crea viajes con tu propio color, imagen y personalidad.</p></div><button id="newTripBtn" class="primary big">＋ <span data-i18n="new_trip">Nuevo viaje</span></button></div>
+      <div id="tripsGrid" class="trips-grid"></div>
+      <div id="emptyState" class="empty hidden"><div class="empty-icon">🧳</div><h2 data-i18n="empty_title">Todavía no tienes viajes</h2><p data-i18n="empty_text">Crea el primero y dale su propia identidad.</p><button class="primary" id="emptyNewTrip" data-i18n="create_first">Crear mi primer viaje</button></div>
+    </section>
+
+    <section id="tripView" class="view">
+      <button id="backBtn" class="back">← <span data-i18n="my_trips">Mis viajes</span></button>
+      <div id="tripHero" class="trip-hero"></div>
+      <nav class="trip-tabs">
+        <button class="trip-tab active" data-tab="overview">✨ <span data-i18n="overview">Inicio</span></button>
+        <button class="trip-tab" data-tab="itinerary">🗓️ <span data-i18n="itinerary">Itinerario</span></button>
+        <button class="trip-tab" data-tab="reservations">🎟️ <span data-i18n="reservations">Reservas</span></button>
+        <button class="trip-tab" data-tab="expenses">💰 <span data-i18n="expenses">Gastos</span></button>
+        <button class="trip-tab" data-tab="moments">❤️ <span data-i18n="moments">Momentos</span></button>
+      </nav>
+      <div id="tripContent"></div>
+    </section>
+  </main>
+
+  <div id="tripModal" class="modal hidden" aria-hidden="true"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle" data-i18n="create_trip">Crear viaje</h2><button id="closeModal" class="icon-btn">✕</button></div>
+    <form id="tripForm">
+      <label><span data-i18n="trip_name">Nombre del viaje</span><input id="tripName" required placeholder="Algarve 2027"></label>
+      <label><span data-i18n="destination">Destino</span><input id="tripDestination" placeholder="Portugal"></label>
+      <div class="two"><label><span data-i18n="start_date">Fecha de inicio</span><input id="tripStart" type="date"></label><label><span data-i18n="end_date">Fecha de fin</span><input id="tripEnd" type="date"></label></div>
+      <label><span data-i18n="travelers">Viajeros</span><input id="tripTravelers" placeholder="Laura, Frank"></label>
+      <label><span data-i18n="trip_phrase">Frase del viaje</span><input id="tripPhrase" placeholder="Sol, playa y cero estrés."></label>
+      <div class="field-title" data-i18n="identity">Identidad del viaje</div>
+      <div class="identity-row"><div><span class="small-label" data-i18n="icon">Icono</span><div class="icon-picker" id="iconPicker"></div><button type="button" id="uploadImageBtn" class="secondary">📷 <span data-i18n="upload_image">Subir imagen</span></button><input id="tripImage" type="file" accept="image/*" hidden></div><div><span class="small-label" data-i18n="color">Color</span><div class="color-picker" id="colorPicker"></div></div></div>
+      <div class="preview" id="tripPreview"></div>
+      <button class="primary full" type="submit" data-i18n="save_trip">Guardar viaje</button>
+    </form>
+  </div></div>
+</div>
+<script type="module" src="app.js"></script>
+</body></html>
