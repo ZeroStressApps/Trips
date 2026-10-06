@@ -88,7 +88,19 @@ function authError(e){
 
 function formatDate(s){if(!s)return '';const d=new Date(s+'T12:00:00');return new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'short',year:'numeric'}).format(d)}
 function daysBetween(a,b){if(!a||!b)return null;return Math.max(1,Math.round((new Date(b)-new Date(a))/86400000)+1)}
-function makeCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s}
+function normalizeCode(value){
+  return String(value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);
+}
+function suggestedCodeFromName(name){
+  const words=String(name||'').toUpperCase().replace(/[^A-Z0-9 ]/g,' ').trim().split(/\s+/).filter(Boolean);
+  let base=words.join('').slice(0,12);
+  if(base.length<4) base=(base+'TRIP').slice(0,12);
+  return base;
+}
+async function codeExists(code, excludeId=''){
+  const snap=await getDocs(query(collection(db,'trips'),where('code','==',code)));
+  return snap.docs.some(d=>d.id!==excludeId);
+}
 
 function subscribeTrips(){
   if(unsubTrips)unsubTrips();
@@ -115,13 +127,23 @@ function renderHome(){
 }
 
 function openModal(id=null){
-  editingId=id;selectedImage='';selectedIcon=icons[0];selectedColor=colors[0];
+  editingId=id;tripCodeManuallyEdited=false;selectedImage='';selectedIcon=icons[0];selectedColor=colors[0];
   $('modalTitle').textContent=id?'Editar viaje':'Crear viaje';
   const tr=trips.find(x=>x.id===id);
   if(tr){
     selectedImage=tr.image||'';selectedIcon=tr.icon||icons[0];selectedColor=tr.color||colors[0];
     [['tripName','name'],['tripDestination','destination'],['tripStart','start'],['tripEnd','end'],['tripTravelers','travelers'],['tripPhrase','phrase']].forEach(([a,b])=>$(a).value=tr[b]||'');
-  }else $('tripForm').reset();
+    $('tripCode').value=tr.code||'';
+    $('tripCode').readOnly=false;
+  }else{
+    $('tripForm').reset();
+    $('tripCode').value=suggestedCodeFromName('');
+    $('tripCode').readOnly=false;
+  }
+  $('tripEnd').min=$('tripStart').value||'';
+  if($('tripStart').value && (!$('tripEnd').value || $('tripEnd').value < $('tripStart').value)){
+    $('tripEnd').value=$('tripStart').value;
+  }
   setupPickers();updatePreview();$('tripModal').classList.remove('hidden');
 }
 function closeModal(){$('tripModal').classList.add('hidden')}
@@ -141,20 +163,47 @@ $('emptyNewTrip').onclick=()=>openModal();
 $('closeModal').onclick=closeModal;
 $('uploadImageBtn').onclick=()=>$('tripImage').click();
 $('tripImage').onchange=e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>1500000){alert('La imagen debe pesar menos de 1,5 MB.');return}const r=new FileReader();r.onload=()=>{selectedImage=r.result;updatePreview()};r.readAsDataURL(f)};
-['tripName','tripDestination'].forEach(id=>$(id).addEventListener('input',updatePreview));
+let tripCodeManuallyEdited=false;
+$('tripCode').addEventListener('input',()=>{tripCodeManuallyEdited=true;$('tripCode').value=normalizeCode($('tripCode').value)});
+$('tripName').addEventListener('input',()=>{
+  updatePreview();
+  if(!editingId && !tripCodeManuallyEdited){
+    $('tripCode').value=suggestedCodeFromName($('tripName').value);
+  }
+});
+
+
+// Fechas del viaje: el fin nunca puede quedar antes del inicio.
+// Si todavía no hay fecha de fin, se coloca inicialmente el mismo día que el inicio.
+// Esto hace que el selector nativo de Android/Chrome abra directamente en el mismo mes
+// que el inicio, en lugar de quedarse en el mes actual.
+$('tripStart').addEventListener('change',()=>{
+  const start=$('tripStart').value;
+  const end=$('tripEnd').value;
+  if(!start)return;
+  $('tripEnd').min=start;
+  if(!end || end < start){
+    $('tripEnd').value=start;
+  }
+});
+
 
 $('tripForm').onsubmit=async e=>{
   e.preventDefault();
-  const payload={name:$('tripName').value.trim(),destination:$('tripDestination').value.trim(),start:$('tripStart').value,end:$('tripEnd').value,travelers:$('tripTravelers').value.trim(),phrase:$('tripPhrase').value.trim(),icon:selectedIcon,color:selectedColor,image:selectedImage,updatedAt:serverTimestamp()};
+  const code=normalizeCode($('tripCode').value);
+  if(code.length<4){alert('El código debe tener al menos 4 caracteres.');return}
+  if(code.length>12){alert('El código puede tener como máximo 12 caracteres.');return}
+  const payload={name:$('tripName').value.trim(),destination:$('tripDestination').value.trim(),start:$('tripStart').value,end:$('tripEnd').value,travelers:$('tripTravelers').value.trim(),phrase:$('tripPhrase').value.trim(),icon:selectedIcon,color:selectedColor,image:selectedImage,code,updatedAt:serverTimestamp()};
   try{
     if(editingId){
       const old=trips.find(x=>x.id===editingId);
       if(!old?.memberUids?.includes(currentUser.uid))throw new Error('No tienes permiso para editar este viaje.');
+      if(code!==old.code && await codeExists(code,editingId))throw new Error('Este código ya está utilizado. Elige otro.');
       await updateDoc(doc(db,'trips',editingId),payload);
       closeModal();openTrip(editingId);
     }else{
-      const code=makeCode();
-      const ref=await addDoc(collection(db,'trips'),{...payload,code,creatorUid:currentUser.uid,memberUids:[currentUser.uid],memberNames:[currentUser.displayName||currentUser.email],createdAt:serverTimestamp()});
+      if(await codeExists(code))throw new Error('Este código ya está utilizado. Elige otro.');
+      const ref=await addDoc(collection(db,'trips'),{...payload,creatorUid:currentUser.uid,memberUids:[currentUser.uid],memberNames:[currentUser.displayName||currentUser.email],createdAt:serverTimestamp()});
       closeModal();openTrip(ref.id);
     }
   }catch(e){alert(e.message||'No se ha podido guardar el viaje.')}

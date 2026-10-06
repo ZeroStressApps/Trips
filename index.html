@@ -65,6 +65,10 @@
       <label>Nombre del viaje<input id="tripName" required placeholder="Algarve 2027"></label>
       <label>Destino<input id="tripDestination" placeholder="Portugal"></label>
       <div class="two"><label>Fecha de inicio<input id="tripStart" type="date"></label><label>Fecha de fin<input id="tripEnd" type="date"></label></div>
+      <label>Código para compartir
+        <input id="tripCode" maxlength="12" minlength="4" pattern="[A-Za-z0-9]{4,12}" placeholder="MADRID2026" autocomplete="off">
+        <small class="field-help">Elige un código de 4 a 12 letras o números. Tus acompañantes lo usarán para unirse al viaje.</small>
+      </label>
       <label>Viajeros<input id="tripTravelers" placeholder="Laura, Frank, Pepita"></label>
       <label>Frase del viaje<input id="tripPhrase" placeholder="Sol, playa y cero estrés."></label>
       <div class="field-title">Identidad del viaje</div>
