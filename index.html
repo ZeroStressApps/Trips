@@ -1,51 +1,93 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#4f7cff"><meta name="description" content="ZeroStress Trips · Tu viaje. Tu historia.">
-<title>ZeroStress Trips</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f7cff">
+<meta name="description" content="ZeroStress Trips · Tu viaje. Tu historia.">
+<title>ZeroStress Trips</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="app">
-  <header class="topbar">
-    <div class="brand"><div class="brand-mark"><img src="icon-192.png" alt="ZeroStress Trips"></div><div><div class="brand-name">ZeroStress</div><div class="brand-sub">TRIPS</div></div></div>
-    <div class="top-actions"><button id="languageBtn" class="icon-btn" aria-label="Language">🌍 <span id="languageLabel">ES</span></button></div>
-  </header>
+  <section id="authView" class="auth-view">
+    <div class="auth-card">
+      <div class="brand auth-brand"><div class="brand-mark"><img src="icon-192.png" alt="ZeroStress Trips"></div><div><div class="brand-name">ZeroStress</div><div class="brand-sub">TRIPS</div></div></div>
+      <h1>Nuestros viajes</h1>
+      <p class="auth-sub">Viajes compartidos, sin convertir la organización en otro viaje.</p>
+      <div class="auth-tabs">
+        <button id="loginTab" class="auth-tab active">Entrar</button>
+        <button id="registerTab" class="auth-tab">Crear cuenta</button>
+      </div>
+      <form id="authForm">
+        <label>Nombre <input id="authName" autocomplete="name" placeholder="Laura"></label>
+        <label>Email <input id="authEmail" type="email" autocomplete="email" required placeholder="tu@email.com"></label>
+        <label>Contraseña <input id="authPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="Mínimo 6 caracteres"></label>
+        <button type="button" id="togglePasswordBtn" class="secondary full">👁️ Ver contraseña</button>
+        <button type="submit" id="authSubmit" class="primary full">Entrar</button>
+      </form>
+      <button id="resetPasswordBtn" class="link-btn">¿Has olvidado tu contraseña?</button>
+      <div id="authMessage" class="auth-message"></div>
+    </div>
+  </section>
 
-  <main>
-    <section id="homeView" class="view active">
-      <div class="welcome"><div><div class="eyebrow" data-i18n="my_trips">MIS VIAJES</div><h1 data-i18n="travel_is_yours">Tu viaje. Tu historia.</h1><p data-i18n="home_intro">Crea viajes con tu propio color, imagen y personalidad.</p></div><button id="newTripBtn" class="primary big">＋ <span data-i18n="new_trip">Nuevo viaje</span></button></div>
-      <div id="tripsGrid" class="trips-grid"></div>
-      <div id="emptyState" class="empty hidden"><div class="empty-icon">🧳</div><h2 data-i18n="empty_title">Todavía no tienes viajes</h2><p data-i18n="empty_text">Crea el primero y dale su propia identidad.</p><button class="primary" id="emptyNewTrip" data-i18n="create_first">Crear mi primer viaje</button></div>
-    </section>
+  <div id="mainApp" class="hidden">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark"><img src="icon-192.png" alt="ZeroStress Trips"></div><div><div class="brand-name">ZeroStress</div><div class="brand-sub">TRIPS</div></div></div>
+      <div class="top-actions"><span id="loggedUser" class="logged-user"></span><button id="languageBtn" class="icon-btn">🌍 <span id="languageLabel">ES</span></button><button id="logoutBtn" class="icon-btn" title="Salir">🚪</button></div>
+    </header>
 
-    <section id="tripView" class="view">
-      <button id="backBtn" class="back">← <span data-i18n="my_trips">Mis viajes</span></button>
-      <div id="tripHero" class="trip-hero"></div>
-      <nav class="trip-tabs">
-        <button class="trip-tab active" data-tab="overview">✨ <span data-i18n="overview">Inicio</span></button>
-        <button class="trip-tab" data-tab="itinerary">🗓️ <span data-i18n="itinerary">Itinerario</span></button>
-        <button class="trip-tab" data-tab="reservations">🎟️ <span data-i18n="reservations">Reservas</span></button>
-        <button class="trip-tab" data-tab="expenses">💰 <span data-i18n="expenses">Gastos</span></button>
-        <button class="trip-tab" data-tab="moments">❤️ <span data-i18n="moments">Momentos</span></button>
-      </nav>
-      <div id="tripContent"></div>
-    </section>
-  </main>
+    <main>
+      <section id="homeView" class="view active">
+        <div class="welcome"><div><div class="eyebrow">MIS VIAJES</div><h1>Tu viaje. Tu historia.</h1><p>Crea viajes compartidos y dales su propia identidad.</p></div><button id="newTripBtn" class="primary big">＋ Nuevo viaje</button></div>
+        <div id="tripsGrid" class="trips-grid"></div>
+        <div id="emptyState" class="empty hidden"><div class="empty-icon">🧳</div><h2>Todavía no tienes viajes</h2><p>Crea uno nuevo o únete a un viaje con su código.</p><button class="primary" id="emptyNewTrip">Crear mi primer viaje</button></div>
+      </section>
 
-  <div id="tripModal" class="modal hidden" aria-hidden="true"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle" data-i18n="create_trip">Crear viaje</h2><button id="closeModal" class="icon-btn">✕</button></div>
+      <section id="tripView" class="view">
+        <button id="backBtn" class="back">← Mis viajes</button>
+        <div id="tripHero" class="trip-hero"></div>
+        <nav class="trip-tabs">
+          <button class="trip-tab active" data-tab="overview">✨ Inicio</button>
+          <button class="trip-tab" data-tab="itinerary">🗓️ Itinerario</button>
+          <button class="trip-tab" data-tab="reservations">🎟️ Reservas</button>
+          <button class="trip-tab" data-tab="expenses">💰 Gastos</button>
+          <button class="trip-tab" data-tab="moments">❤️ Momentos</button>
+        </nav>
+        <div id="tripContent"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="tripModal" class="modal hidden" aria-hidden="true"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle">Crear viaje</h2><button id="closeModal" class="icon-btn">✕</button></div>
     <form id="tripForm">
-      <label><span data-i18n="trip_name">Nombre del viaje</span><input id="tripName" required placeholder="Algarve 2027"></label>
-      <label><span data-i18n="destination">Destino</span><input id="tripDestination" placeholder="Portugal"></label>
-      <div class="two"><label><span data-i18n="start_date">Fecha de inicio</span><input id="tripStart" type="date"></label><label><span data-i18n="end_date">Fecha de fin</span><input id="tripEnd" type="date"></label></div>
-      <label><span data-i18n="travelers">Viajeros</span><input id="tripTravelers" placeholder="Laura, Frank"></label>
-      <label><span data-i18n="trip_phrase">Frase del viaje</span><input id="tripPhrase" placeholder="Sol, playa y cero estrés."></label>
-      <div class="field-title" data-i18n="identity">Identidad del viaje</div>
-      <div class="identity-row"><div><span class="small-label" data-i18n="icon">Icono</span><div class="icon-picker" id="iconPicker"></div><button type="button" id="uploadImageBtn" class="secondary">📷 <span data-i18n="upload_image">Subir imagen</span></button><input id="tripImage" type="file" accept="image/*" hidden></div><div><span class="small-label" data-i18n="color">Color</span><div class="color-picker" id="colorPicker"></div></div></div>
+      <label>Nombre del viaje<input id="tripName" required placeholder="Algarve 2027"></label>
+      <label>Destino<input id="tripDestination" placeholder="Portugal"></label>
+      <div class="two"><label>Fecha de inicio<input id="tripStart" type="date"></label><label>Fecha de fin<input id="tripEnd" type="date"></label></div>
+      <label>Viajeros<input id="tripTravelers" placeholder="Laura, Frank, Pepita"></label>
+      <label>Frase del viaje<input id="tripPhrase" placeholder="Sol, playa y cero estrés."></label>
+      <div class="field-title">Identidad del viaje</div>
+      <div class="identity-row"><div><span class="small-label">Icono</span><div class="icon-picker" id="iconPicker"></div><button type="button" id="uploadImageBtn" class="secondary">📷 Subir imagen</button><input id="tripImage" type="file" accept="image/*" hidden></div><div><span class="small-label">Color</span><div class="color-picker" id="colorPicker"></div></div></div>
       <div class="preview" id="tripPreview"></div>
-      <button class="primary full" type="submit" data-i18n="save_trip">Guardar viaje</button>
+      <button class="primary full" type="submit">Guardar viaje</button>
     </form>
+  </div></div>
+
+  <div id="joinModal" class="modal hidden" aria-hidden="true"><div class="modal-card small-modal">
+    <div class="modal-head"><h2>Unirme a un viaje</h2><button id="closeJoinModal" class="icon-btn">✕</button></div>
+    <p>Introduce el código que te ha dado la persona que creó el viaje.</p>
+    <form id="joinForm"><label>Código de invitación<input id="joinCode" required maxlength="8" placeholder="ABC123"></label><button class="primary full" type="submit">Unirme al viaje</button></form>
+    <div id="joinMessage" class="auth-message"></div>
+  </div></div>
+
+  <div id="inviteModal" class="modal hidden" aria-hidden="true"><div class="modal-card small-modal">
+    <div class="modal-head"><h2>Código del viaje</h2><button id="closeInviteModal" class="icon-btn">✕</button></div>
+    <p>Comparte este código con las personas que quieres invitar.</p>
+    <div id="inviteCodeDisplay" class="invite-code"></div>
+    <button id="copyInviteBtn" class="primary full">📋 Copiar código</button>
   </div></div>
 </div>
 <script type="module" src="app.js"></script>
-</body></html>
+</body>
+</html>
