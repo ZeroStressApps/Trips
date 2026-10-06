@@ -98,8 +98,10 @@ function suggestedCodeFromName(name){
   return base;
 }
 async function codeExists(code, excludeId=''){
-  const snap=await getDocs(query(collection(db,'trips'),where('code','==',code)));
-  return snap.docs.some(d=>d.id!==excludeId);
+  const ref=doc(db,'inviteCodes',code);
+  const snap=await getDoc(ref);
+  if(!snap.exists()) return false;
+  return snap.data()?.tripId !== excludeId;
 }
 
 function subscribeTrips(){
@@ -198,15 +200,50 @@ $('tripForm').onsubmit=async e=>{
     if(editingId){
       const old=trips.find(x=>x.id===editingId);
       if(!old?.memberUids?.includes(currentUser.uid))throw new Error('No tienes permiso para editar este viaje.');
+      if(old.creatorUid!==currentUser.uid)throw new Error('Solo la persona creadora puede cambiar el código del viaje.');
       if(code!==old.code && await codeExists(code,editingId))throw new Error('Este código ya está utilizado. Elige otro.');
+
+      if(code!==old.code){
+        // Register the new invite code first, then remove the old one.
+        await setDoc(doc(db,'inviteCodes',code),{
+          tripId:editingId,
+          creatorUid:currentUser.uid,
+          createdAt:serverTimestamp()
+        });
+        if(old.code) await deleteDoc(doc(db,'inviteCodes',old.code));
+      }
       await updateDoc(doc(db,'trips',editingId),payload);
       closeModal();openTrip(editingId);
     }else{
       if(await codeExists(code))throw new Error('Este código ya está utilizado. Elige otro.');
-      const ref=await addDoc(collection(db,'trips'),{...payload,creatorUid:currentUser.uid,memberUids:[currentUser.uid],memberNames:[currentUser.displayName||currentUser.email],createdAt:serverTimestamp()});
+      const ref=await addDoc(collection(db,'trips'),{
+        ...payload,
+        creatorUid:currentUser.uid,
+        memberUids:[currentUser.uid],
+        memberNames:[currentUser.displayName||currentUser.email],
+        createdAt:serverTimestamp()
+      });
+      try{
+        await setDoc(doc(db,'inviteCodes',code),{
+          tripId:ref.id,
+          creatorUid:currentUser.uid,
+          createdAt:serverTimestamp()
+        });
+      }catch(inviteError){
+        // Avoid leaving an inaccessible orphan trip if the invite code cannot be created.
+        try{await deleteDoc(ref)}catch{}
+        throw inviteError;
+      }
       closeModal();openTrip(ref.id);
     }
-  }catch(e){alert(e.message||'No se ha podido guardar el viaje.')}
+  }catch(e){
+    console.error('ZERO STRESS TRIPS · TRIP SAVE ERROR',e);
+    if(e?.code==='permission-denied'){
+      alert('Firebase ha rechazado la operación por permisos. Revisa las Firestore Rules de esta versión.');
+    }else{
+      alert(e.message||'No se ha podido guardar el viaje.');
+    }
+  }
 };
 
 function openTrip(id){currentId=id;$('homeView').classList.remove('active');$('tripView').classList.add('active');renderTrip(id);window.scrollTo({top:0,behavior:'smooth'})}
@@ -244,11 +281,16 @@ $('joinForm').onsubmit=async e=>{
   e.preventDefault();const code=$('joinCode').value.trim().toUpperCase();
   if(!code)return;
   try{
-    const snap=await getDocs(query(collection(db,'trips'),where('code','==',code)));
-    if(snap.empty){$('joinMessage').textContent='No hemos encontrado ningún viaje con ese código.';return}
-    const d=snap.docs[0],tr=d.data();
+    const inviteRef=doc(db,'inviteCodes',code);
+    const inviteSnap=await getDoc(inviteRef);
+    if(!inviteSnap.exists()){$('joinMessage').textContent='No hemos encontrado ningún viaje con ese código.';return}
+    const invite=inviteSnap.data();
+    const d=doc(db,'trips',invite.tripId);
+    const tripSnap=await getDoc(d);
+    if(!tripSnap.exists()){$('joinMessage').textContent='El código existe pero el viaje ya no está disponible.';return}
+    const tr=tripSnap.data();
     if((tr.memberUids||[]).includes(currentUser.uid)){$('joinMessage').textContent='Ya formas parte de este viaje.';return}
-    await updateDoc(d.ref,{memberUids:arrayUnion(currentUser.uid),memberNames:arrayUnion(currentUser.displayName||currentUser.email),updatedAt:serverTimestamp()});
+    await updateDoc(d,{memberUids:arrayUnion(currentUser.uid),memberNames:arrayUnion(currentUser.displayName||currentUser.email),updatedAt:serverTimestamp()});
     $('joinMessage').textContent='¡Te has unido al viaje!';$('joinMessage').classList.add('ok');
     setTimeout(()=>{$('joinModal').classList.add('hidden');openTrip(d.id)},500);
   }catch(e){$('joinMessage').textContent='No se ha podido unir al viaje. Revisa las reglas de Firestore.'}

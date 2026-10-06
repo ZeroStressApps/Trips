@@ -12,6 +12,21 @@ service cloud.firestore {
         && request.auth.uid == userId;
     }
 
+    match /inviteCodes/{code} {
+      // A signed-in user may check a code, but this collection contains
+      // only the trip reference, not the trip's private content.
+      allow read: if signedIn();
+
+      // The creator of a trip may register its invite code.
+      allow create: if signedIn()
+        && request.resource.data.creatorUid == request.auth.uid
+        && request.resource.data.tripId is string;
+
+      // Only the creator associated with the code may change/remove it.
+      allow update, delete: if signedIn()
+        && resource.data.creatorUid == request.auth.uid;
+    }
+
     match /trips/{tripId} {
       allow create: if signedIn()
         && request.resource.data.creatorUid == request.auth.uid
@@ -21,15 +36,9 @@ service cloud.firestore {
         && resource.data.memberUids.hasAny([request.auth.uid]);
 
       allow update: if signedIn()
-        && (
-          resource.data.memberUids.hasAny([request.auth.uid])
-        )
-        && (
-          request.resource.data.memberUids.hasAny([request.auth.uid])
-        )
-        && (
-          request.resource.data.creatorUid == resource.data.creatorUid
-        )
+        && resource.data.memberUids.hasAny([request.auth.uid])
+        && request.resource.data.memberUids.hasAny([request.auth.uid])
+        && request.resource.data.creatorUid == resource.data.creatorUid
         && (
           request.resource.data.creatorUid == request.auth.uid
           || (
