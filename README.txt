@@ -23,3 +23,6 @@ Reemplaza los archivos de la carpeta ZeroStressTrips del repositorio por los de 
 
 
 Version 1.2: itinerary day tabs, per-day colors, custom activity types and optional start/end times. Existing localStorage key retained to preserve trips during app updates.
+
+
+Versión 1.4: pestaña Equipaje con biblioteca reutilizable de listas y checklist independiente por viaje. Las listas guardadas se almacenan por separado de los viajes.
