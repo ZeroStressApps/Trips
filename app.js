@@ -1,6 +1,6 @@
 const KEY='zerostress-trips-v1';
 const LANG_KEY='zerostress-language';
-const icons=['✈️','🌴','🏖️','🏔️','🏙️','🚗','🏝️','❤️','👨‍👩‍👧‍👦','👯','🎒','♨️','🍷','🎉','🌍'];
+const icons=['✈️','🌴','🏖️','🏔️','🏙️','💼','🚗','🏝️','❤️','👨‍👩‍👧‍👦','👯','🎒','♨️','🍷','🎉','🌍'];
 const colors=['#4f7cff','#22a699','#f59e0b','#ef6a6a','#9b6cff','#ec4899','#14b8a6','#64748b'];
 const i18n={
  es:{my_trips:'MIS VIAJES',travel_is_yours:'Tu viaje. Tu historia.',home_intro:'Crea viajes con tu propio color, imagen y personalidad.',new_trip:'Nuevo viaje',empty_title:'Todavía no tienes viajes',empty_text:'Crea el primero y dale su propia identidad.',create_first:'Crear mi primer viaje',create_trip:'Crear viaje',trip_name:'Nombre del viaje',destination:'Destino',start_date:'Fecha de inicio',end_date:'Fecha de fin',travelers:'Viajeros',trip_phrase:'Frase del viaje',identity:'Identidad del viaje',icon:'Icono',color:'Color',upload_image:'Subir imagen',save_trip:'Guardar viaje',overview:'Inicio',itinerary:'Itinerario',reservations:'Reservas',expenses:'Gastos',moments:'Momentos',edit:'Editar',delete:'Eliminar',days:'días',no_dates:'Sin fechas',no_destination:'Sin destino',add_day:'Añadir día',coming_soon:'Esta sección la construiremos en la siguiente fase.',trip_saved:'Viaje guardado.',delete_confirm:'¿Eliminar este viaje? Esta acción no se puede deshacer.',delete_trip:'Eliminar viaje'},
