@@ -1,20 +1,22 @@
-ZeroStress Trips - primera base funcional
+ZeroStress Trips - versión 1.0
 
-Esta versión es un prototipo local de la futura app comercial.
+Base: versión 0.9 con itinerario. Esta actualización conserva las funciones anteriores y añade accesos rápidos al itinerario.
+
 Incluye:
-- Mis viajes
-- Crear/editar/eliminar viajes
-- Fechas, destino, viajeros y frase
-- Icono o imagen personalizada por viaje
-- Color personalizado por viaje
-- 5 idiomas: ES/EN/FR/DE/IT
-- PWA y almacenamiento local
+- Crear, editar, duplicar y eliminar viajes
+- Fechas de ida y vuelta validadas
+- Icono, imagen y color personalizados
+- 5 idiomas: español, inglés, francés, alemán e italiano
+- Itinerario con días generados a partir de las fechas del viaje
+- Actividades con hora, lugar y notas
+- Accesos rápidos agrupados: transporte, planes y notas
+- Tipos rápidos: vuelo, hotel, equipaje, autobús, coche, taxi, tren, documento, teléfono, lugar y tarea
+- Almacenamiento local y estructura PWA
+- Caché de servicio actualizado para cargar esta versión
 
-Siguiente fase:
-- Firebase Authentication
-- Firestore por usuario
-- Firebase Storage para imágenes
-- sincronización entre dispositivos
-- viajes compartidos
-- itinerario, reservas, gastos y momentos
-- privacidad y seguridad
+Importante:
+- Los datos se guardan en este navegador/dispositivo. Todavía no hay sincronización Firebase entre dispositivos.
+- La compatibilidad sin conexión es un requisito del proyecto, pero debe probarse en el dispositivo instalado antes de considerarla validada.
+
+Publicación:
+Reemplaza los archivos de la carpeta ZeroStressTrips del repositorio por los de esta carpeta y publica los cambios.

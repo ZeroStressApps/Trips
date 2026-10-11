@@ -36,3 +36,43 @@
 .card-actions [data-action="duplicate"]:hover{background:#e0e9ff}
 .hero-duplicate{width:44px;height:42px;min-width:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:18px;border:1px solid #dfe5ef;border-radius:12px;background:#eef3ff;color:#344c8c;cursor:pointer}
 .hero-duplicate:hover{background:#e0e9ff}
+
+/* Itinerario ZeroStress Trips */
+.itinerary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 18px}
+.itinerary-heading h2{margin:0 0 5px;font-size:1.35rem}.itinerary-heading p{margin:0;color:var(--muted,#667085)}
+.day-count{white-space:nowrap;background:#eaf4f1;color:#3d766a;border-radius:999px;padding:8px 12px;font-weight:800;font-size:.85rem}
+.itinerary-days{display:grid;gap:18px}
+.day-card{background:var(--card,#fff);border:1px solid var(--border,#e8e9e8);border-radius:22px;padding:18px;box-shadow:0 8px 24px rgba(40,60,50,.05)}
+.day-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:15px;border-bottom:1px solid var(--border,#e8e9e8)}
+.day-date{display:flex;align-items:center;gap:13px;min-width:0}
+.day-number{display:grid;place-items:center;flex:0 0 48px;height:48px;border-radius:16px;background:var(--trip-color,#d7ebe5);font-weight:900;color:#345d54}
+.day-date>div{display:grid;gap:4px;min-width:0}
+.day-title-input{border:0;background:transparent;font-size:1.08rem;font-weight:850;color:var(--text,#25332e);padding:2px 0;max-width:100%;min-width:0}
+.day-title-input:focus{outline:2px solid #b5d9ce;border-radius:6px;padding:3px 6px}
+.day-date time{font-size:.88rem;color:var(--muted,#667085)}
+.day-item-count{background:#f0f4f2;color:#50665e;border-radius:999px;padding:5px 10px;font-size:.8rem;font-weight:800}
+.day-items{display:grid;gap:10px;padding:14px 0}
+.itinerary-item{display:flex;align-items:flex-start;gap:12px;border:1px solid #edf0ed;background:#fcfdfc;border-radius:14px;padding:12px}
+.item-type{font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.04em;color:#4d8275;background:#e9f4ef;padding:6px 8px;border-radius:8px;max-width:115px}
+.item-main{display:grid;gap:5px;flex:1;min-width:0}.item-main strong{font-size:.95rem}.item-main span,.item-main p{font-size:.86rem;color:var(--muted,#667085);margin:0;overflow-wrap:anywhere}
+.item-remove{border:0;background:#fff0ef;color:#a33c34;border-radius:9px;width:30px;height:30px;font-size:1.2rem;cursor:pointer;flex-shrink:0}
+.add-item-form{display:grid;gap:11px;border-top:1px dashed #dfe7e2;padding-top:16px}
+.add-item-form label{display:grid;gap:6px;font-size:.82rem;font-weight:750;color:#53645c}
+.add-item-form input,.add-item-form select,.add-item-form textarea{width:100%;min-width:0;border:1px solid #dfe6e1;background:#fff;border-radius:11px;padding:10px 11px;font:inherit;color:#26352e;box-sizing:border-box}
+.item-form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:10px}
+.add-item-form .primary{justify-self:start}
+.itinerary-empty{padding:24px}
+@media(max-width:600px){.day-card{padding:13px;border-radius:17px}.day-number{flex-basis:42px;height:42px}.item-type{max-width:92px;font-size:.65rem}.item-form-row{grid-template-columns:1fr}.itinerary-item{gap:8px;padding:9px}}
+
+/* Accesos rápidos inspirados en patrones de planificación de viajes */
+.quick-add-panel{background:#f8f7f3;border:1px solid var(--border,#e8e9e8);border-radius:20px;padding:17px;margin:0 0 20px}
+.quick-add-panel h3{margin:0 0 5px;font-size:1.08rem}.quick-add-panel>p{margin:0 0 13px;color:var(--muted,#667085);font-size:.9rem}
+.quick-day-picker{display:grid;gap:6px;max-width:360px;margin-bottom:14px;font-size:.82rem;font-weight:750;color:#53645c}
+.quick-day-picker select{width:100%;border:1px solid #dfe6e1;background:#fff;border-radius:11px;padding:10px 11px;font:inherit;color:#26352e}
+.quick-add-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.quick-add-group{background:rgba(255,255,255,.8);border:1px solid #e5e2da;border-radius:15px;padding:12px}
+.quick-add-group h4{margin:0 0 10px;font-size:.82rem;color:#7a6a4e}
+.quick-add-options{display:flex;flex-wrap:wrap;gap:8px}
+.quick-add-chip{border:1px solid #e2e3df;background:#fff;border-radius:999px;padding:9px 12px;color:var(--text,#25332e);font:inherit;font-size:.86rem;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s}
+.quick-add-chip:hover,.quick-add-chip:focus-visible{background:#f0eee6;border-color:#c7b58e;outline:none}
+@media(max-width:600px){.quick-add-panel{padding:13px}.quick-add-groups{grid-template-columns:1fr}.quick-add-chip{padding:9px 10px}}
