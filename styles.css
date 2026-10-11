@@ -30,3 +30,9 @@
 .image-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
 .remove-image-btn{background:#fff0ef!important;color:#b42318!important}
 .remove-image-btn:hover{background:#ffe0dd!important}
+
+/* Botón para duplicar viajes */
+.card-actions [data-action="duplicate"]{background:#eef3ff;color:#344c8c;font-weight:800}
+.card-actions [data-action="duplicate"]:hover{background:#e0e9ff}
+.hero-duplicate{width:44px;height:42px;min-width:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:18px;border:1px solid #dfe5ef;border-radius:12px;background:#eef3ff;color:#344c8c;cursor:pointer}
+.hero-duplicate:hover{background:#e0e9ff}
