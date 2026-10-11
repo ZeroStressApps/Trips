@@ -41,7 +41,7 @@
       <label><span data-i18n="travelers">Viajeros</span><input id="tripTravelers" placeholder="Laura, Frank"></label>
       <label><span data-i18n="trip_phrase">Frase del viaje</span><input id="tripPhrase" placeholder="Sol, playa y cero estrés."></label>
       <div class="field-title" data-i18n="identity">Identidad del viaje</div>
-      <div class="identity-row"><div><span class="small-label" data-i18n="icon">Icono</span><div class="icon-picker" id="iconPicker"></div><button type="button" id="uploadImageBtn" class="secondary">📷 <span data-i18n="upload_image">Subir imagen</span></button><input id="tripImage" type="file" accept="image/*" hidden></div><div><span class="small-label" data-i18n="color">Color</span><div class="color-picker" id="colorPicker"></div></div></div>
+      <div class="identity-row"><div><span class="small-label" data-i18n="icon">Icono</span><div class="icon-picker" id="iconPicker"></div><div class="image-controls"><button type="button" id="uploadImageBtn" class="secondary">📷 <span data-i18n="upload_image">Subir imagen</span></button><button type="button" id="removeImageBtn" class="secondary remove-image-btn hidden">✖ <span data-i18n="remove_image">Quitar imagen</span></button></div><input id="tripImage" type="file" accept="image/*" hidden></div><div><span class="small-label" data-i18n="color">Color</span><div class="color-picker" id="colorPicker"></div></div></div>
       <div class="preview" id="tripPreview"></div>
       <button class="primary full" type="submit" data-i18n="save_trip">Guardar viaje</button>
     </form>

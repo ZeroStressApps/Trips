@@ -25,3 +25,8 @@
   cursor:pointer;
 }
 .hero-delete-icon:focus-visible{outline:3px solid rgba(180,35,24,.28);outline-offset:2px}
+
+/* Controles para alternar entre imagen personalizada e icono */
+.image-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.remove-image-btn{background:#fff0ef!important;color:#b42318!important}
+.remove-image-btn:hover{background:#ffe0dd!important}
