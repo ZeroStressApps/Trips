@@ -20,3 +20,6 @@ Importante:
 
 Publicación:
 Reemplaza los archivos de la carpeta ZeroStressTrips del repositorio por los de esta carpeta y publica los cambios.
+
+
+Version 1.1: itinerary day tabs, per-day colors, custom activity types and optional start/end times. Existing localStorage key retained to preserve trips during app updates.
